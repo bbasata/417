@@ -37,3 +37,7 @@ jobs:
           }' > main.tf
           TF_IN_AUTOMATION=1 terraform fmt
           TF_IN_AUTOMATION=1 terraform init
+
+      - name: List files
+        run: |
+          find .terraform
