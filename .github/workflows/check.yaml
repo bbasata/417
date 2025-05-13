@@ -12,7 +12,8 @@ jobs:
           "1.6.*",
         ]
         os_arch: [
-          "ubuntu-24.04-arm", # linux_arm64 -- not available for private repositories yet
+          "ubuntu-24.04-arm",
+          "ubuntu-24.04",
         ]
     runs-on: ${{ matrix.os_arch }}
     name: Terraform ${{ matrix.terraform }} (${{ matrix.os_arch }})
