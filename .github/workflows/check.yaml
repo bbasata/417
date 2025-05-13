@@ -1,0 +1,39 @@
+name: Verify
+run-name: Verify
+on:
+  workflow_dispatch:
+
+jobs:
+  check-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform: [
+          "1.6.*",
+        ]
+        os_arch: [
+          "ubuntu-24.04-arm", # linux_arm64 -- not available for private repositories yet
+        ]
+    runs-on: ${{ matrix.os_arch }}
+    name: Terraform ${{ matrix.terraform }} (${{ matrix.os_arch }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: ${{ matrix.terraform }}
+          terraform_wrapper: false
+
+      - name: Install Terraform provider
+        run: |
+          echo 'terraform {
+            required_providers {
+              local = {
+                source = "hashicorp/local"
+                version = "2.5.3"
+              }
+            }
+          }' > main.tf
+          TF_IN_AUTOMATION=1 terraform fmt
+          TF_IN_AUTOMATION=1 terraform init
